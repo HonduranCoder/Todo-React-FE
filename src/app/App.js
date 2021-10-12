@@ -1,47 +1,74 @@
 import { Component } from 'react';
-import Header from './Header';
 import Footer from './Footer';
-import Home from '../home/Home';
 import {
   BrowserRouter as Router,
+  NavLink,
   Route,
   Switch,
   Redirect
 } from 'react-router-dom';
+import HomePage from './HomePage.js';
+import SignupPage from './SignupPage.js';
+import LoginPage from './LoginPage.js'; 
+import TodoPage from './TodoPage.js';
+
 import './App.css';
 
+const TOKEN_KEY = 'TOKEN';
 class App extends Component {
+  state = {
+    token: localStorage.getItem(TOKEN_KEY) || ''
+  }
+
+  handleTokenChange = token => {
+    localStorage.setItem(TOKEN_KEY, token);
+    this.setState({ token: token });
+  }
+
+  logout = () => {
+    localStorage.clear();
+    this.setState({ token: '' });
+  }
 
   render() {
     return (
       <div className="App">
         <Router>
-          <Header/>
-          <main>
+          <header className = "header">
+            <NavLink exact activeClassName="active" to="/">Home</NavLink>
+            <NavLink exact activeClassName="active" to="/signup">Signup</NavLink>
+            <NavLink exact activeClassName="active" to="/login">Login</NavLink>
+            <NavLink exact activeClassName="active" to="/todos">Todos</NavLink>
+            {this.state.token && <button onClick={this.logout}>Logout</button>}          
+          </header>
+          <Switch>
+            <Route path="/" exact
+              render={routerProps => (
+                <HomePage {...routerProps}/>
+              )}
+            />
 
-            <Switch>
-              <Route path="/" exact={true}
-                render={routerProps => (
-                  <Home {...routerProps}/>
-                )}
-              />
+            <Route path="/signup" exact
+              render={routerProps => (
+                <SignupPage {...routerProps}/>
+              )}
+            />
 
-              <Route path="/resources" exact={true}
-                render={routerProps => (
-                  <div>Implement a page of resources</div>
-                )}
-              />
+            <Route path="/login" exact
+              render={routerProps => (
+                <LoginPage handleTokenChange = {this.handleTokenChange} {...routerProps}/>
+              )}
+            />
 
-              <Route path="/resources/:id"
-                render={routerProps => (
-                  <div>Implement a page for id {routerProps.match.params.id}</div>
-                )}
-              />
-
-              <Redirect to="/" />
-
-            </Switch>
-          </main>
+            <Route path="/todos" exact
+              render={routerProps => (
+                this.state.token
+                  ? <TodoPage token={this.state.token}
+                    {...routerProps}/>
+                  : <Redirect to="/" />
+              )}
+            />
+          </Switch>
           <Footer/>
         </Router>
       </div>
