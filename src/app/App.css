@@ -25,3 +25,23 @@ main, body, html {
 .home{
   margin-top: 5px;
 }
+
+.todo{
+  cursor: pointer;
+}
+
+.todo:hover{
+  transform: scale(1.2);
+  color:black;
+}
+
+.completed{
+  background-color: lavender;
+  color: black;
+  text-decoration: line-through;
+}
+
+.not-completed{
+  background-color: cornflowerblue;
+  color:black;
+}
