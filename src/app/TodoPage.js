@@ -36,7 +36,7 @@ export default class TodoPage extends Component {
 
                 this.setState({ todos });
               }} 
-              className={todo.completed ? 'todo completed' : 'todo not completed'}>
+              className={todo.completed ? 'todo completed' : 'todo not-completed'}>
               {todo.todo}
             </div>)}
           </div>
